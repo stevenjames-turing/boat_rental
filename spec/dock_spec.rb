@@ -66,4 +66,27 @@ RSpec.describe Dock do
    expect(dock.rental_log).to eq(expected)
   end
 
+  it 'can track the total dollar amount to be charged based upon rental time and price per hour' do
+    dock = Dock.new("The Rowing Dock", 3)
+    kayak_1 = Boat.new(:kayak, 20)
+    patrick = Renter.new("Patrick Star", "4242424242424242")
+
+    dock.rent(kayak_1, patrick)
+    kayak_1.add_hour
+    kayak_1.add_hour
+
+    expected = {
+      :card_number => "4242424242424242",
+      :amount => 40
+    }
+
+    expect(dock.charge(kayak_1)).to eq(expected)
+  end
+
+  xit 'limits the total charge amount based upon the max rental time per dock' do
+
+
+
+  end
+
 end
