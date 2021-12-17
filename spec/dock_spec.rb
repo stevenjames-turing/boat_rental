@@ -77,16 +77,42 @@ RSpec.describe Dock do
 
     expected = {
       :card_number => "4242424242424242",
-      :amount => 40
-    }
+      :amount => 40}
 
     expect(dock.charge(kayak_1)).to eq(expected)
   end
 
-  xit 'limits the total charge amount based upon the max rental time per dock' do
+  it 'limits the total charge amount based upon the max rental time per dock' do
+    dock = Dock.new("The Rowing Dock", 3)
+    sup_1 = Boat.new(:standup_paddle_board, 15)
+    eugene = Renter.new("Eugene Crabs", "1313131313131313")
 
+    dock.rent(sup_1, eugene)
+    sup_1.add_hour
 
+    expected_1hour = {
+      :card_number => "1313131313131313",
+      :amount => 15}
 
+    expect(dock.charge(sup_1)).to eq(expected_1hour)
+
+    sup_1.add_hour
+    sup_1.add_hour
+
+    expected_3hour = {
+      :card_number => "1313131313131313",
+      :amount => 45}
+
+      expect(dock.charge(sup_1)).to eq(expected_3hour)
+
+      sup_1.add_hour
+      sup_1.add_hour
+
+    expected_5hour = {
+      :card_number => "1313131313131313",
+      :amount => 45}
+
+      expect(dock.charge(sup_1)).to eq(expected_5hour)
   end
 
 end
