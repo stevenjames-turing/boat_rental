@@ -115,4 +115,32 @@ RSpec.describe Dock do
       expect(dock.charge(sup_1)).to eq(expected_5hour)
   end
 
+  it 'logs the hours for each rental as they accrue' do
+    dock = Dock.new("The Rowing Dock", 3)
+    kayak_1 = Boat.new(:kayak, 20)
+    kayak_2 = Boat.new(:kayak, 20)
+    canoe = Boat.new(:canoe, 25)
+    sup_1 = Boat.new(:standup_paddle_board, 15)
+    sup_2 = Boat.new(:standup_paddle_board, 15)
+    patrick = Renter.new("Patrick Star", "4242424242424242")
+    eugene = Renter.new("Eugene Crabs", "1313131313131313")
+
+    dock.rent(kayak_1, patrick)
+    dock.rent(kayak_2, patrick)
+
+    dock.log_hour
+
+    expected_rental_log = {
+      kayak_1=> patrick,
+      kayak_2=> patrick}
+
+    expected_charge_kayak1 = {
+      :card_number => "4242424242424242",
+      :amount => 20}
+
+    expect(dock.rental_log).to eq(expected_rental_log)
+    expect(dock.charge(kayak_1)).to eq(expected_charge_kayak1)
+  end
+
+
 end
