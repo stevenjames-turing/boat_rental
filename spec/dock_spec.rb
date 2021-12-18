@@ -170,6 +170,49 @@ RSpec.describe Dock do
     expect(dock.charge(canoe)).to eq(expected_charge_canoe)
   end
 
-  
+  it 'revenue is not calculated until boats are returned' do
+    dock = Dock.new("The Rowing Dock", 3)
+    kayak_1 = Boat.new(:kayak, 20)
+    kayak_2 = Boat.new(:kayak, 20)
+    canoe = Boat.new(:canoe, 25)
+    sup_1 = Boat.new(:standup_paddle_board, 15)
+    sup_2 = Boat.new(:standup_paddle_board, 15)
+    patrick = Renter.new("Patrick Star", "4242424242424242")
+    eugene = Renter.new("Eugene Crabs", "1313131313131313")
+    dock.rent(kayak_1, patrick)
+    dock.rent(kayak_2, patrick)
+    dock.log_hour
+    dock.rent(canoe, patrick)
+    dock.log_hour
+
+    expect(dock.revenue).to eq(0)
+  end
+
+  it 'can calculate revenue earned when boats have been returned' do
+    dock = Dock.new("The Rowing Dock", 3)
+    kayak_1 = Boat.new(:kayak, 20)
+    kayak_2 = Boat.new(:kayak, 20)
+    canoe = Boat.new(:canoe, 25)
+    sup_1 = Boat.new(:standup_paddle_board, 15)
+    sup_2 = Boat.new(:standup_paddle_board, 15)
+    patrick = Renter.new("Patrick Star", "4242424242424242")
+    eugene = Renter.new("Eugene Crabs", "1313131313131313")
+    dock.rent(kayak_1, patrick)
+    dock.rent(kayak_2, patrick)
+    dock.log_hour
+    dock.rent(canoe, patrick)
+    dock.log_hour
+    expect(dock.revenue).to eq(0)
+
+    dock.return(kayak_1)
+    dock.return(kayak_2)
+    dock.return(canoe)
+
+    expect(dock.revenue).to eq(105)
+    expect(dock.rental_log.empty?).to be true 
+  end
+
+
+
 
 end
