@@ -23,4 +23,7 @@ class Dock
       boat.add_hour
     end
   end
+
+  def revenue
+  end
 end
